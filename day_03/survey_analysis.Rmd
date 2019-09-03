@@ -34,7 +34,7 @@ Let's preview the survey data
 View(df)
 ```
 
-We can see that the first two rows are unncessary to reading the data. When we load the data, we can tell R to skip adding those first two lines into the data frame. 
+We can see that the first two rows are unnecessary to reading the data. When we load the data, we can tell R to skip adding those first two lines into the data frame. 
 
 Try this with the Import UI, and/or try doing this by reading the readr documentation and writing your own code
 ```{r}
@@ -45,9 +45,9 @@ df_raw <- read_csv(here::here("Data", file_name),
 
 view(df_raw)
 ```
-We've managed to exclude the metadata from our dataframe, but now the column names don't seem to make sense! 
+We've managed to exclude the metadata from our data frame, but now the column names don't seem to make sense! 
 
-What we'll need to do instead is store the column names in a seperate variable, then read it back in to the data frame. 
+What we'll need to do instead is store the column names in a separate variable, then read it back in to the data frame. 
 ```{r}
 #store column names
 df_names <- read_csv(here::here("Data", file_name), n_max=0) %>% names()
@@ -72,9 +72,9 @@ dfSummary(df_raw)
 #same code, but more readable in the Viewer pane
 view(dfSummary(df_raw))
 ```
-What do you notice? We can see the min and max of the start dates for the survey, we can see that Q4 has 7 missing values, Q6 has 54 mising values, 41% of the responses came from ci = 1, and there are 12 of the same email in column `e.` 
+What do you notice? We can see the min and max of the start dates for the survey, we can see that Q4 has 7 missing values, Q6 has 54 missing values, 41% of the responses came from ci = 1, and there are 12 of the same email in column `e.` 
 
-This report is helpful in seeing if there are any anomolies or large missing values in the dataset. Sometime this report will catch whether we've read the data incorrectly and stop us before we analyze a broken data set. 
+This report is helpful in seeing if there are any anomalies or large missing values in the data set. Sometime this report will catch whether we've read the data incorrectly and stop us before we analyze a broken data set. 
 
 The columns `ci` and `e` might not be easily understood from other people trying to read your code. Let's rename the column
 
@@ -94,7 +94,7 @@ df_raw %>%
   count() %>% 
   arrange(desc(n))
 ```
-This time, let's use the `janitor` package to find duplciate emails. 
+This time, let's use the `janitor` package to find duplicate emails. 
 
 ```{r}
 df_raw %>% 
@@ -111,7 +111,7 @@ df_raw <- df_raw %>%
   ungroup()
 ```
 
-Let's double check that we've removed all of the duplciates
+Let's double check that we've removed all of the duplicates
 
 ```{r}
 df_raw %>% 
@@ -152,7 +152,7 @@ df_raw <-
   left_join(demo_data, by = c("e" = "email"))
 ```
 
-Use `dfSummary` to quickview the data set. 
+Use `dfSummary` to quick view the data set. 
 
 ```{r}
 view(dfSummary(df_raw))
@@ -193,7 +193,7 @@ Q1_table %>%
 ```
 Hmm, looks like we want to reorder the bars from the order in which the response options were shown. 
 
-Let's relevel the response options to give them order. 
+Let's re-level the response options to give them order. 
 ```{r}
 Q1_table <- 
   Q1_table %>% 
@@ -423,7 +423,7 @@ Q5_table %>%
   scale_y_continuous(labels = scales::percent) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 20))
 ```
-Sometimes our stakeholders are only interested in the Top 2 Boxes. Let's calculate them by grouping the varaibles together. We can do this by using the `case_when()` function. 
+Sometimes our stakeholders are only interested in the Top 2 Boxes. Let's calculate them by grouping the variables together. We can do this by using the `case_when()` function. 
 
 
 ```{r}
