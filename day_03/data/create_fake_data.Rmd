@@ -7,6 +7,8 @@ output: html_notebook
 ```{r setup}
 library(charlatan)
 library(glue)
+
+set.seed(99)
 ```
 
 ```{r}
@@ -120,8 +122,6 @@ emails_to_dupe <-
 demos <- full_join(emails, emails_to_dupe)
 
 view(dfSummary(demos))
-
-write_csv(demos, here::here("Data", "demos.csv"))
 ```
 
 ```{r}
@@ -137,7 +137,13 @@ view(dfSummary(df))
 
 
 ```{r}
-
+#store survey file data
 write_csv(df, "survey_file.csv")
+```
+
+```{r}
+#store distinct demos
+demos <- distinct(demos, email, .keep_all = TRUE) %>% 
+  write_csv(., here::here("Data","distinct_demos.csv"))
 ```
 

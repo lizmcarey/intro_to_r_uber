@@ -27,8 +27,10 @@ Alternatively, if you know the file path, you can read the data set using the co
 file_name <- "survey_file.csv"
 
 #read the survey data, name the dataframe `df`
-df <- read_csv(here::here("Data", file_name))
+df <- read_csv(here::here("data", file_name))
 ```
+
+
 Let's preview the survey data
 ```{r}
 View(df)
@@ -40,20 +42,20 @@ Try this with the Import UI, and/or try doing this by reading the readr document
 ```{r}
 ?read_csv
 
-df_raw <- read_csv(here::here("Data", file_name),
+df_raw <- read_csv(here::here("data", file_name),
                    skip = 2)
 
-view(df_raw)
+View(df_raw)
 ```
 We've managed to exclude the metadata from our data frame, but now the column names don't seem to make sense! 
 
 What we'll need to do instead is store the column names in a separate variable, then read it back in to the data frame. 
 ```{r}
 #store column names
-df_names <- read_csv(here::here("Data", file_name), n_max=0) %>% names()
+df_names <- read_csv(here::here("data", file_name), n_max=0) %>% names()
 
 # Read the entire file
-df_raw <- read_csv(here::here("Data", file_name), 
+df_raw <- read_csv(here::here("data", file_name), 
                col_names = df_names, # use df_names to title the columns
                skip = 3)             # skip the first three lines
 View(df_raw)
@@ -72,11 +74,11 @@ dfSummary(df_raw)
 #same code, but more readable in the Viewer pane
 view(dfSummary(df_raw))
 ```
-What do you notice? We can see the min and max of the start dates for the survey, we can see that Q4 has 7 missing values, Q6 has 54 missing values, 41% of the responses came from ci = 1, and there are 12 of the same email in column `e.` 
+What do you notice? We can see the min and max of the start dates for the survey, we can see that Q4 has some missing values, Q6 has missing values, 41% of the responses came from ci = 1, and there are 12 of the same emails in column `e.` 
 
-This report is helpful in seeing if there are any anomalies or large missing values in the data set. Sometime this report will catch whether we've read the data incorrectly and stop us before we analyze a broken data set. 
+This report is helpful in seeing if there are any anomalies or large missing values in the data set. Sometimes this report will catch whether we've read the data incorrectly and stop us before we analyze a broken data set. 
 
-The columns `ci` and `e` might not be easily understood from other people trying to read your code. Let's rename the column
+The column `ci` might not be easily understood by other people trying to read your code. Let's rename the column to something that's more readable.
 
 ```{r}
 df_raw <- 
@@ -86,7 +88,7 @@ df_raw <-
 df_raw
 ```
 
-From the summary report, it looks like we saw some duplicate emails. Let's count how many duplicates there are. 
+From the summary report, it looks like there are a few duplicate emails. Let's count how many duplicates there are. 
 
 ```{r}
 df_raw %>% 
@@ -101,7 +103,7 @@ df_raw %>%
   get_dupes(e)
 ```
 
-Let's delete the duplicate emails, and keep their first response
+Let's delete the duplicate emails and keep the first response from the duplicated emails. 
 
 ```{r}
 #Remove duplicate emails, keep the first submission date
@@ -118,17 +120,17 @@ df_raw %>%
   get_dupes(e)
   
 ```
-We can also see that the number of observations in df_raw is 1025, meaning 32 of the duplicate emails have been removed. 
+We can also see that the number of observations in df_raw is now 1025, meaning 32 of the duplicate emails have been removed. 
 
-We also have some demographic data of the respondents that lives in the Data folder in the file called, "demos.csv"
+We also have some demographic data of the respondents that lives in the data folder in the file called, "distinct_demos.csv"
 
-Let's read in the demo's csv as "demo_data"
+Let's read in the distinct_demo's csv as "demo_data"
 
 ```{r}
-demo_data <- read_csv(here::here("Data", "demos.csv"))
+demo_data <- read_csv(here::here("data", "distinct_demos.csv"))
 ```
 
-Now, let's create one merged table by joining the `df_raw` table with the `demo_data` table and call if `df`
+Now, let's create one merged table by joining the `df_raw` table with the `demo_data` table and call it `df`
 
 ```{r}
 #Uncomment the code and run it
@@ -147,9 +149,12 @@ df_raw %>%
 df_raw %>% 
   left_join(demo_data, by = c("e" = "email"))
 
+#lets store the join data sets as df_raw
 df_raw <- 
   df_raw %>% 
   left_join(demo_data, by = c("e" = "email"))
+
+df_raw
 ```
 
 Use `dfSummary` to quick view the data set. 
@@ -162,15 +167,18 @@ Now we can see `df_raw` has a few new columns like gender, age, and firstname.
 
 Let's analyze Question 1! 
 
-```{r}
-#store a function that calculates the margin of error where p = sample proportion, n = sample size, and z is the critical value (z-score). 
+First, let's store a function that calculates the margin of error where p = sample proportion, n = sample size, and z is the critical value (z-score). 
 
+```{r}
 calc_moe <- function(p,n, z=1.96){
   x <- z*sqrt(p*(1-p)/n)
   return(x)
 }
+```
 
+Now, let's calculcate a frequency table of the responses from Question 1, with the margin of error for each response.
 
+```{r}
 Q1_table <- df_raw %>% 
   group_by(Q1) %>% 
   summarize(n = n()) %>% 
@@ -210,7 +218,7 @@ Q1_table %>%
   ggplot(aes(x = Q1, y = proportion)) + 
   geom_col()
 ```
-Now let's get fancy. Let's color the bars, add the error bars, add labels to the bars, and to the graph.
+Now let's get fancy. Let's color the bars, add the error bars, add labels to the bars and to the graph.
 
 To understand what each line of code does, try commenting out a line and rerunning the code. Can you spot what's different? 
 
@@ -234,6 +242,9 @@ Q1_table %>%
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 
 ```
+
+Now let's do Q2.
+
 ```{r}
 Q2_table <- df_raw %>% 
   group_by(Q2) %>% 
@@ -247,6 +258,7 @@ Q2_table <- df_raw %>%
 
 Q2_table
 ```
+
 ```{r}
 Q2_table %>% 
   ggplot(aes(x = Q2, y = proportion)) + 
@@ -326,7 +338,7 @@ Q3_table %>%
     caption = glue("Error bars represent 95% confidence intervals\nn = {Q3_table$total}")
   ) + 
   scale_y_continuous(labels = scales::percent) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 18))
 ```
 Let's analyze Q4. 
 
@@ -343,12 +355,12 @@ Q4_table <- df_raw %>%
 
 Q4_table
 ```
-We notice that 5 counts are `NA` which means 5 respondents skipped this question. Let's be sure to remove these null values from our total n size. 
+We notice that a few counts are `NA` which means a few respondents skipped this question. Let's be sure to remove these null values from our total n size. 
 
 ```{r}
 Q4_table <- 
   df_raw %>% 
-  filter(!is.na(Q4)) %>% 
+  filter(!is.na(Q4)) %>% #this line removes the Null values
   group_by(Q4) %>% 
   summarize(n = n()) %>% 
   mutate(total = sum(n), 
@@ -381,7 +393,7 @@ Q4_table %>%
   scale_y_continuous(labels = scales::percent) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
-Let's look at Q5's satisfaction question.  
+Let's look at Q5's satisfaction question.  We'll want to relevel the response options so they are plotted in order. 
 ```{r}
 Q5_table <- df_raw %>% 
   group_by(Q5) %>% 
@@ -474,7 +486,7 @@ top_levels(Q5_table$Q5)
 
 top_levels(Q5_table$Q5, n = 1)
 ```
-
+Let's look at Q6
 ```{r}
 Q6_table <- df_raw %>% 
   group_by(Q6) %>% 
@@ -488,7 +500,7 @@ Q6_table <- df_raw %>%
 
 Q6_table
 ```
-Looks like 66 people skipped this question. We want the proportion of those who *answered* the question. So let's remove those who skipped the question from our total n size. 
+Looks like we have respondents who skipped this question. We want the proportion of those who *answered* the question. So let's remove those who skipped the question from our total n size. 
 
 ```{r}
 Q6_table <- df_raw %>% 
@@ -504,7 +516,7 @@ Q6_table <- df_raw %>%
 
 Q6_table
 ```
-Notice how the total is now 991? We removed the 66 null rows. 
+Notice how the total is now smaller because we removed the null values.  
 
 ```{r}
 Q6_table %>% 
