@@ -49,6 +49,52 @@ factorial(more_pi)
 
 What happened in your Environment when you ran that code? 
 
+## Code Chunk Options 
+
+There are a lot of things you can do in a code chunk: you can produce text output, tables, or graphics. 
+
+You also have control over all these output via chunk options, which can be provided inside the curly braces (between ```{r and }). 
+
+`echo=FALSE` indicates that the code will not be shown in the final document (though any results/output would still be displayed).
+
+```{r, echo=FALSE}
+x <- rnorm(100)
+y <- 2*x + rnorm(100)
+cor(x, y)
+```
+You use `results="hide"` to hide the results/output (but here the code would still be displayed).
+
+```{r, results="hide"}
+x <- rnorm(100)
+y <- 2*x + rnorm(100)
+cor(x, y)
+```
+You use `include=FALSE` to have the chunk *evaluated*, but neither the code nor its output displayed.
+
+```{r, include=FALSE}
+x <- rnorm(100)
+y <- 2*x + rnorm(100)
+cor(x, y)
+```
+
+For figures, you’ll want to use options like fig.width and fig.height
+
+```{r scatterplot, fig.width=8, fig.height=6}
+plot(x,y)
+```
+
+## R Markdown
+
+Markdown provides an easy way to make standard types of formatted text, like
+
+- *italics*
+- **bold**
+- `code`
+- [links](rmarkdown.rstudio.com)
+- Latex equations, $E = mc^{2}$
+- etc.
+
+
 ## "knitted" HTML version
 
 This functionality is supported by an R package called `knitr`, so we often talk about "knitted" versions of RMarkdown and R Notebook documents. 
