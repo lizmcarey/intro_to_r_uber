@@ -58,14 +58,33 @@ library(dplyr)
 
 
 ## Beatles data
-Let's make a toy dataset to play with. 
+Let's make a toy data set to play with. 
 
 ```{r}
-beatles <- data.frame(
+beatles_dataframe <- data.frame(
   name = c("John", "Paul", "George", "Ringo"),
   birth = c(1940, 1942, 1943, 1940), 
   instrument = c("guitar", "bass", "guitar", "drums")
 )
+```
+
+Create the same toy data set but in a tibble format. We can use the `tibble()` or the `tribble()` function
+```{r}
+beatles_tibble1 <- tibble(
+  name = c("John", "Paul", "George", "Ringo"),
+  birth = c(1940, 1942, 1943, 1940), 
+  instrument = c("guitar", "bass", "guitar", "drums")
+)
+
+
+beatles_tibble2 <- tribble(
+  ~name, ~birth, ~instrument, 
+  #--|--|----
+  "John", 1940, "guitar", 
+  "Paul", 1942, "bass", 
+  "George", 1943, "guitar", 
+  "Ringo", 1940, "drums"
+  )
 ```
 
 ## Select
@@ -78,28 +97,6 @@ select(beatles, name, birth)
 ## Your turn
 Select just the instrument column
 
-
-
-## Base R
-```{r}
-beatles[2,3]
-beatles[ ,"birth"]
-beatles[ ,c("name","birth")]
-beatles$birth
-```
-
-## Your turn
-Select just the instrument column using brackets
-
-```{r}
-
-```
-
-Select just the instrument column using a dollar sign.
-
-```{r}
-
-```
 
 ## Filter
 
@@ -117,19 +114,12 @@ filter(beatles, birth==1940 & instrument == "guitar")
 ```
 
 ## Your turn
-Modify  the code below to filter out the rows for which birth is 1943 or instrument is drums
+Modify the code below to filter out the rows for which birth is 1943 or instrument is drums
 
 ```{r}
 filter(beatles, birth==1940 & instrument == "guitar")
 ```
 
-
-## Base R
-
-```{r}
-beatles[c(FALSE,TRUE,TRUE,FALSE), ]
-beatles[beatles$birth == 1940, ]
-```
 
 ## Your turn
 
@@ -179,7 +169,7 @@ arrange(select(filter(babynames, year == 2015,
 ```
 
 ## Piping
-The `%>%` operator is the pipe. We can reorganized our code like so:
+The `%>%` operator is the pipe. We can reorganize our code like so:
 
 ```{r}
 babynames %>%
@@ -200,9 +190,4 @@ Use %>% to write a sequence of functions that:
 
 ```
 
-## Diamonds data
-
-```{r}
-
-```
 
