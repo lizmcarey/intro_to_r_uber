@@ -1,39 +1,57 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Basic Survey Analysis"
+author: "Liz Carey"
+date: "2019-09"
+output:  
+    html_document: 
+      toc: true
+      toc_float: true
+      theme: paper
+      code_folding: hide
+      highlight: textmate
+      df_print: paged
 ---
 
+```{r include = FALSE}
+#set default options for chunks
+knitr:: opts_chunk$set(warning = FALSE, message = FALSE)
+
+```
+
+
 ## Setup 
-First things, first. Let's load all the necessary libraries we'll need! 
+First things, first. Let's load all the necessary libraries we'll need.  
 
 ```{r setup}
-library(tidyverse)
-library(summarytools)
-library(here) # Find current working directory and directories of files
+library(tidyverse) # Load all the necessary tidy tools packages for data manipulation/cleaning
+library(summarytools) # See summary of data
 library(skimr) # View summary statistics
-library(janitor) # R functions to find duplicate values
+library(here) # Find current working directory and directories of files
+library(janitor) # R functions to find duplicate values and create crosstables
+library(glue) # paste text values togethers
 
 ```
 
 
 ##Load survey data
 
-You have 1 of two options to load the survey data. You can use the File drop down, then click on `Import Dataset`, then `From Text (readr)` and follow the UI to import the data. 
+You have one of two options to load survey data. You can use the File drop down, then click on `Import Dataset`, then `From Text (readr)` and follow the UI to import the data. 
 
-Alternatively, if you know the file path, you can read the data set using the code below
+OR, if you know the file path, you can read the data set using the code below
 
 ```{r}
 #store the file path name
 file_name <- "survey_file.csv"
 
-#read the survey data, name the dataframe `df`
+#read in the survey data from the 'data' folder and name the dataframe `df`
 df <- read_csv(here::here("data", file_name))
 ```
 
 
 Let's preview the survey data
 ```{r}
-View(df)
+# Uncomment this code to preview the data
+# View(df)
 ```
 
 We can see that the first two rows are unnecessary to reading the data. When we load the data, we can tell R to skip adding those first two lines into the data frame. 
@@ -45,36 +63,38 @@ Try this with the Import UI, and/or try doing this by reading the readr document
 df_raw <- read_csv(here::here("data", file_name),
                    skip = 2)
 
-View(df_raw)
+# View(df_raw)
 ```
-We've managed to exclude the metadata from our data frame, but now the column names don't seem to make sense! 
+We've managed to exclude the metadata from our data frame, but now the column names don't seem to make sense... 
 
 What we'll need to do instead is store the column names in a separate variable, then read it back in to the data frame. 
 ```{r}
-#store column names
+# Store column names
 df_names <- read_csv(here::here("data", file_name), n_max=0) %>% names()
 
 # Read the entire file
 df_raw <- read_csv(here::here("data", file_name), 
                col_names = df_names, # use df_names to title the columns
                skip = 3)             # skip the first three lines
-View(df_raw)
+# View(df_raw)
 ```
 
 Let's use `skim()` to get an overview of our data set
 
 ```{r}
-skim(df_raw)
+# Use this block to run skim on the `df` data frame
 ```
-Now, let's try using the package `summarytools` to view our data set. 
+Now, let's try using the package `summarytools` to view our data set. First try the function `dfSummary()`, then try  `view(dfSummary())`
 
 ```{r}
-dfSummary(df_raw)
+# dfSummary(df_raw)
 
-#same code, but more readable in the Viewer pane
-view(dfSummary(df_raw))
+# same output, but more readable in the Viewer pane
+# view(dfSummary(df_raw))
 ```
-What do you notice? We can see the min and max of the start dates for the survey, we can see that Q4 has some missing values, Q6 has missing values, 41% of the responses came from ci = 1, and there are 12 of the same emails in column `e.` 
+What do you notice when looking at the report? 
+
+From the report you can see the min and max of the start dates for the survey, Q4 has some missing values, Q6 has missing values, 41% of the responses came from ci = 1, and there are 12 of the same emails in column `e.` 
 
 This report is helpful in seeing if there are any anomalies or large missing values in the data set. Sometimes this report will catch whether we've read the data incorrectly and stop us before we analyze a broken data set. 
 
@@ -85,10 +105,11 @@ df_raw <-
   df_raw %>% 
     rename(city_id = ci)
 
-df_raw
+#run names() to check the column names of the data set
+names(df_raw)
 ```
 
-From the summary report, it looks like there are a few duplicate emails. Let's count how many duplicates there are. 
+From the summary report, it also looks like there are a few duplicate emails. Let's count how many duplicates there are. 
 
 ```{r}
 df_raw %>% 
@@ -113,7 +134,7 @@ df_raw <- df_raw %>%
   ungroup()
 ```
 
-Let's double check that we've removed all of the duplicates
+Let's double check that we've removed all of the duplicates. We'd expect  `get_dupes()` to return 0 rows. 
 
 ```{r}
 df_raw %>% 
@@ -137,7 +158,7 @@ Now, let's create one merged table by joining the `df_raw` table with the `demo_
 # df_raw %>% 
 #   left_join(demo_data)
 ```
-Why did this error out? Turns out R doesn't know what unique key to join the two tables. We can either rename the `e` column in `df_raw` to `email` or we can tell the `left_join()` function which columns to merge on. 
+Why did this error out? Turns out R doesn't know what unique key to use to join the two tables. We can either rename the `e` column in `df_raw` to `email` or we can tell the `left_join()` function which columns to merge on. 
 
 ```{r}
 #option 1: rename column `e` to `email`
@@ -149,7 +170,7 @@ df_raw %>%
 df_raw %>% 
   left_join(demo_data, by = c("e" = "email"))
 
-#lets store the join data sets as df_raw
+#lets store the joined data sets as df_raw
 df_raw <- 
   df_raw %>% 
   left_join(demo_data, by = c("e" = "email"))
@@ -160,11 +181,12 @@ df_raw
 Use `dfSummary` to quick view the data set. 
 
 ```{r}
-view(dfSummary(df_raw))
+# view(dfSummary(df_raw))
 ```
 
 Now we can see `df_raw` has a few new columns like gender, age, and firstname. 
 
+## Q1
 Let's analyze Question 1! 
 
 First, let's store a function that calculates the margin of error where p = sample proportion, n = sample size, and z is the critical value (z-score). 
@@ -176,7 +198,7 @@ calc_moe <- function(p,n, z=1.96){
 }
 ```
 
-Now, let's calculcate a frequency table of the responses from Question 1, with the margin of error for each response.
+Now, let's calculate a frequency table of the responses from Question 1, with the margin of error for each response.
 
 ```{r}
 Q1_table <- df_raw %>% 
@@ -199,6 +221,7 @@ Q1_table %>%
   ggplot(aes(x = Q1, y = proportion)) + 
   geom_col()
 ```
+</br> 
 Hmm, looks like we want to reorder the bars from the order in which the response options were shown. 
 
 Let's re-level the response options to give them order. 
@@ -218,9 +241,10 @@ Q1_table %>%
   ggplot(aes(x = Q1, y = proportion)) + 
   geom_col()
 ```
-Now let's get fancy. Let's color the bars, add the error bars, add labels to the bars and to the graph.
+</br> 
+Now let's get fancy. Let's color the bars, add error bars, and add labels to the bars and titles to the graph.
 
-To understand what each line of code does, try commenting out a line and rerunning the code. Can you spot what's different? 
+To understand what each line of code does, try commenting out a line and rerunning the code. Can you spot what's different each time you run it? 
 
 ```{r}
 Q1_table %>% 
@@ -243,6 +267,7 @@ Q1_table %>%
 
 ```
 
+## Q2
 Now let's do Q2.
 
 ```{r}
@@ -278,14 +303,20 @@ Q2_table %>%
   scale_y_continuous(labels = scales::percent) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
-Multi-select questions require different code to analyze from the way it's stored. 
 
-You'll need to transform the data from wide to long before grouping and calculating the frequencies. 
+## Q3
+
+What do you notice that's different about Q3? 
+
+That's right, the values are stored over multiple columns... that's because the question is multi-select. We'll need to use different code from Q1 and Q2 to analyze Q3 because of the way the data is organized.  
+
+You'll need to transform the data from **wide to long** before grouping and calculating the frequencies. (Remember when we learned about `gather()`?)
 
 ```{r}
-Q3_table <- df_raw %>% 
-  select(starts_with("Q3")) %>% 
-  gather(question, response) %>% 
+Q3_table <- 
+  df_raw %>% 
+  select(starts_with("Q3")) %>% # Select all columns that start with "Q3"
+  gather(question, response) %>% # Organize the columns into key-value pairs
   group_by(question) %>% 
   count(question, response) %>% 
   mutate(total = sum(n), 
@@ -294,7 +325,7 @@ Q3_table <- df_raw %>%
          lower = proportion - moe, 
          upper = proportion + moe
   ) %>% 
-  filter(!is.na(response))
+  filter(!is.na(response)) #Show values that are not Null
 
 Q3_table
 ```
@@ -311,13 +342,14 @@ Q3_table %>%
   ) + 
   geom_text(aes(label = paste0(round(proportion*100), "%"), y = upper), vjust = -.3) + 
   labs (
-    title = "Q2", 
-    subtitle = "How many food delivery apps do you have installed on your phone?", 
-    caption = glue("Error bars represent 95% confidence intervals\nn = {Q2_table$total}")
+    title = "Q3", 
+    subtitle = "Which of the following are reasons why you order food delivery? Select all that apply.", 
+    caption = glue("Error bars represent 95% confidence intervals\nn = {Q3_table$total}")
   ) + 
   scale_y_continuous(labels = scales::percent) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
+</br> 
 Let's reorder the bars by frequency
 
 ```{r}
@@ -340,6 +372,9 @@ Q3_table %>%
   scale_y_continuous(labels = scales::percent) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 18))
 ```
+
+## Q4 
+
 Let's analyze Q4. 
 
 ```{r}
@@ -355,7 +390,7 @@ Q4_table <- df_raw %>%
 
 Q4_table
 ```
-We notice that a few counts are `NA` which means a few respondents skipped this question. Let's be sure to remove these null values from our total n size. 
+Notice the last row is titled `NA`? A few counts are `NA` means a few respondents skipped this question. Let's be sure to remove these null values from our total n size. 
 
 ```{r}
 Q4_table <- 
@@ -393,7 +428,9 @@ Q4_table %>%
   scale_y_continuous(labels = scales::percent) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
-Let's look at Q5's satisfaction question.  We'll want to relevel the response options so they are plotted in order. 
+
+##Q5 
+Now let's look at Q5's satisfaction question.  We'll want to relevel the response options so they are plotted in order. 
 ```{r}
 Q5_table <- df_raw %>% 
   group_by(Q5) %>% 
@@ -479,6 +516,7 @@ Q5_table_top2 %>%
   scale_y_continuous(labels = scales::percent) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 20))
 ```
+</br>
 If you remember that we used the `janitor` package earlier, you'll see they have a function to quickly analyze top2 boxes. Try the function `top_levels()`
 
 ```{r}
@@ -486,6 +524,8 @@ top_levels(Q5_table$Q5)
 
 top_levels(Q5_table$Q5, n = 1)
 ```
+## Q6 
+
 Let's look at Q6
 ```{r}
 Q6_table <- df_raw %>% 
@@ -500,7 +540,7 @@ Q6_table <- df_raw %>%
 
 Q6_table
 ```
-Looks like we have respondents who skipped this question. We want the proportion of those who *answered* the question. So let's remove those who skipped the question from our total n size. 
+Looks like we have respondents who skipped this question, too. We want the proportion of those who *answered* the question. So let's remove those who skipped the question from our total n size. 
 
 ```{r}
 Q6_table <- df_raw %>% 
@@ -516,7 +556,7 @@ Q6_table <- df_raw %>%
 
 Q6_table
 ```
-Notice how the total is now smaller because we removed the null values.  
+Notice how the total is now smaller because we removed the null values? 
 
 ```{r}
 Q6_table %>% 
@@ -539,10 +579,12 @@ Q6_table %>%
   scale_x_discrete(labels = function(x) str_wrap(x, width = 20))
 ```
 
+##Q7
+
 ```{r}
 Q7_table <-  
   df_raw %>% 
-  select(starts_with("Q7"), -ends_with("TEXT")) %>% 
+  select(starts_with("Q7"), -ends_with("TEXT")) %>% # Exclude the open text column of Q7
   gather(question, 
          response) %>% 
   group_by(question) %>% 
@@ -580,7 +622,10 @@ Q7_table %>%
   scale_x_discrete(labels = function(x) str_wrap(x, width = 20))
 ```
 
-Let's save this chart as a png so we can include it in a presentation. 
+##Save the chart
+Use the code below to save this chart as a png so we can include it in a presentation. 
+
+Do you remember how to customize the size of the png? 
 
 ```{r}
 ggsave("Q7_plot.png")

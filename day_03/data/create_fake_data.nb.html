@@ -255,44 +255,12 @@ set.seed(99)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3N0b3JlIGZpbGUgcGF0aFxuZmlsZSA8LSBcInN0YXRzX3Rlc3RpbmdfdjEuY3N2XCJcbiNzdG9yZSBjb2x1bW4gbmFtZXNcbmRmX25hbWVzIDwtIHJlYWRfY3N2KGZpbGUsIG5fbWF4PTApICU+JSBuYW1lcygpXG5gYGAifQ== -->
-<pre class="r"><code>#store file path
-file &lt;- &quot;stats_testing_v1.csv&quot;
-#store column names
-df_names &lt;- read_csv(file, n_max=0) %&gt;% names()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICAuZGVmYXVsdCA9IGNvbF9jaGFyYWN0ZXIoKVxuKVxuU2VlIHNwZWMoLi4uKSBmb3IgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbnMuXG4ifQ== -->
-<pre><code>Parsed with column specification:
-cols(
-  .default = col_character()
-)
-See spec(...) for full column specifications.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBSZWFkIHRoZSBlbnRpcmUgZmlsZVxuZGZfcmF3IDwtIHJlYWRfY3N2KGZpbGUsIFxuICAgICAgICAgICAgICAgY29sX25hbWVzID0gZGZfbmFtZXMsICMgdXNlIGRmX25hbWVzIHRvIHRpdGxlIHRoZSBjb2x1bW5zXG4gICAgICAgICAgICAgICBza2lwID0gMykgICAgICAgICAgICAgIyBza2lwIHRoZSBmaXJzdCB0aHJlZSBsaW5lc1xuYGBgIn0= -->
-<pre class="r"><code># Read the entire file
-df_raw &lt;- read_csv(file, 
-               col_names = df_names, # use df_names to title the columns
-               skip = 3)             # skip the first three lines</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICAuZGVmYXVsdCA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgU3RhcnREYXRlID0gY29sX2RhdGV0aW1lKGZvcm1hdCA9IFwiXCIpLFxuICBFbmREYXRlID0gY29sX2RhdGV0aW1lKGZvcm1hdCA9IFwiXCIpLFxuICBQcm9ncmVzcyA9IGNvbF9pbnRlZ2VyKCksXG4gIGBEdXJhdGlvbiAoaW4gc2Vjb25kcylgID0gY29sX2ludGVnZXIoKSxcbiAgUmVjb3JkZWREYXRlID0gY29sX2RhdGV0aW1lKGZvcm1hdCA9IFwiXCIpLFxuICBMb2NhdGlvbkxhdGl0dWRlID0gY29sX2RvdWJsZSgpLFxuICBMb2NhdGlvbkxvbmdpdHVkZSA9IGNvbF9kb3VibGUoKVxuKVxuU2VlIHNwZWMoLi4uKSBmb3IgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbnMuXG4ifQ== -->
-<pre><code>Parsed with column specification:
-cols(
-  .default = col_character(),
-  StartDate = col_datetime(format = &quot;&quot;),
-  EndDate = col_datetime(format = &quot;&quot;),
-  Progress = col_integer(),
-  `Duration (in seconds)` = col_integer(),
-  RecordedDate = col_datetime(format = &quot;&quot;),
-  LocationLatitude = col_double(),
-  LocationLongitude = col_double()
-)
-See spec(...) for full column specifications.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3N0b3JlIHRoZSBxdWVzdGlvbiBuYW1lcyBhcyBhIHF1ZXN0aW9uIGJhbmtcbnF1ZXN0aW9uX2JhbmsgPC0gcmVhZF9jc3YoZmlsZSwgbl9tYXg9MSkgJT4lICAjIHJlYWQgaW4gdGhlIGZpcnN0IHJvdyBvZiB0aGUgZmlsZVxuICAgICAgICAgICAgICAgICBzZWxlY3Qoc3RhcnRzX3dpdGgoXCJRXCIpKSAlPiUgIyBzZWxlY3QgY29sdW1ucyB0aGF0IHN0YXJ0IHdpdGggUVxuICAgICAgICAgICAgICAgICBnYXRoZXIoa2V5LCBxdWVzdGlvbl90ZXh0KSAgICMgdHJhbnNmb3JtIGRhdGEgZnJvbSB3aWRlIHRvIGxvbmdcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3N0b3JlIHRoZSBxdWVzdGlvbiBuYW1lcyBhcyBhIHF1ZXN0aW9uIGJhbmtcbnF1ZXN0aW9uX2JhbmsgPC0gcmVhZF9jc3YoZmlsZSwgbl9tYXg9MSkgJT4lICAjIHJlYWQgaW4gdGhlIGZpcnN0IHJvdyBvZiB0aGUgZmlsZVxuICAgICAgICAgICAgICAgICBzZWxlY3Qoc3RhcnRzX3dpdGgoXCJRXCIpKSAlPiUgIyBzZWxlY3QgY29sdW1ucyB0aGF0IHN0YXJ0IHdpdGggUVxuICAgICAgICAgICAgICAgICBnYXRoZXIoa2V5LCBxdWVzdGlvbl90ZXh0KSAgICMgdHJhbnNmb3JtIGRhdGEgZnJvbSB3aWRlIHRvIGxvbmdcblxuYGBgIn0= -->
 <pre class="r"><code>#store the question names as a question bank
 question_bank &lt;- read_csv(file, n_max=1) %&gt;%  # read in the first row of the file
                  select(starts_with(&quot;Q&quot;)) %&gt;% # select columns that start with Q
-                 gather(key, question_text)   # transform data from wide to long</code></pre>
+                 gather(key, question_text)   # transform data from wide to long
+</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICAuZGVmYXVsdCA9IGNvbF9jaGFyYWN0ZXIoKVxuKVxuU2VlIHNwZWMoLi4uKSBmb3IgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbnMuXG4ifQ== -->
 <pre><code>Parsed with column specification:
@@ -300,40 +268,6 @@ cols(
   .default = col_character()
 )
 See spec(...) for full column specifications.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfZmlyc3RfdHdvIDwtIHJlYWRfY3N2KGZpbGUsIFxuICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF90eXBlcyA9IGNvbHMoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICBTdGFydERhdGUgPSBjb2xfZGF0ZXRpbWUoKSwgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICBFbmREYXRlID0gY29sX2RhdGV0aW1lKCksIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgUHJvZ3Jlc3MgPSBjb2xfaW50ZWdlcigpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgYER1cmF0aW9uIChpbiBzZWNvbmRzKWAgPSBjb2xfaW50ZWdlcigpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgUmVjb3JkZWREYXRlID0gY29sX2RhdGV0aW1lKCksIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgTG9jYXRpb25Mb25naXR1ZGUgPSBjb2xfbnVtYmVyKCksIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgTG9jYXRpb25MYXRpdHVkZSA9IGNvbF9udW1iZXIoKVxuICAgICAgICAgICAgICAgICAgICAgICAgICksIFxuICAgICAgICAgICAgICAgICAgICAgICAgIG5fbWF4ID0gMilcbmBgYCJ9 -->
-<pre class="r"><code>df_first_two &lt;- read_csv(file, 
-                         col_types = cols(
-                           StartDate = col_datetime(), 
-                           EndDate = col_datetime(), 
-                           Progress = col_integer(),
-                           `Duration (in seconds)` = col_integer(),
-                           RecordedDate = col_datetime(), 
-                           LocationLongitude = col_number(), 
-                           LocationLatitude = col_number()
-                         ), 
-                         n_max = 2)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoibnVtYmVyIG9mIGNvbHVtbnMgb2YgcmVzdWx0IGlzIG5vdCBhIG11bHRpcGxlIG9mIHZlY3RvciBsZW5ndGggKGFyZyAxKTE0IHBhcnNpbmcgZmFpbHVyZXMuXG5yb3cgXHUwMDFiWzM4OzU7MjQ2bSMgQSB0aWJibGU6IDUgeCA1XHUwMDFiWzM5bSBjb2wgICAgIHJvdyBjb2wgICAgICAgICAgICAgICAgICAgZXhwZWN0ZWQgICAgIGFjdHVhbCAgICAgICAgICAgICAgICBmaWxlICAgICAgICAgICAgICAgICAgIGV4cGVjdGVkICAgXHUwMDFiWzNtXHUwMDFiWzM4OzU7MjQ2bTxpbnQ+XHUwMDFiWzM5bVx1MDAxYlsyM20gXHUwMDFiWzNtXHUwMDFiWzM4OzU7MjQ2bTxjaHI+XHUwMDFiWzM5bVx1MDAxYlsyM20gICAgICAgICAgICAgICAgIFx1MDAxYlszbVx1MDAxYlszODs1OzI0Nm08Y2hyPlx1MDAxYlszOW1cdTAwMWJbMjNtICAgICAgICBcdTAwMWJbM21cdTAwMWJbMzg7NTsyNDZtPGNocj5cdTAwMWJbMzltXHUwMDFiWzIzbSAgICAgICAgICAgICAgICAgXHUwMDFiWzNtXHUwMDFiWzM4OzU7MjQ2bTxjaHI+XHUwMDFiWzM5bVx1MDAxYlsyM20gICAgICAgICAgICAgICAgICBhY3R1YWwgXHUwMDFiWzM4OzU7MjUwbTFcdTAwMWJbMzltICAgICAxIFN0YXJ0RGF0ZSAgICAgICAgICAgICBcdTAwMWJbMzg7NTsyNDZtXCJcdTAwMWJbMzltZGF0ZSBsaWtlIFx1MDAxYlszODs1OzI0Nm1cIlx1MDAxYlszOW0gU3RhcnQgRGF0ZSAgICAgICAgICAgICdzdGF0c190ZXN0aW5nX3YxLmNzdicgZmlsZSBcdTAwMWJbMzg7NTsyNTBtMlx1MDAxYlszOW0gICAgIDEgRW5kRGF0ZSAgICAgICAgICAgICAgIFx1MDAxYlszODs1OzI0Nm1cIlx1MDAxYlszOW1kYXRlIGxpa2UgXHUwMDFiWzM4OzU7MjQ2bVwiXHUwMDFiWzM5bSBFbmQgRGF0ZSAgICAgICAgICAgICAgJ3N0YXRzX3Rlc3RpbmdfdjEuY3N2JyByb3cgXHUwMDFiWzM4OzU7MjUwbTNcdTAwMWJbMzltICAgICAxIFByb2dyZXNzICAgICAgICAgICAgICBhbiBpbnRlZ2VyICAgUHJvZ3Jlc3MgICAgICAgICAgICAgICdzdGF0c190ZXN0aW5nX3YxLmNzdicgY29sIFx1MDAxYlszODs1OzI1MG00XHUwMDFiWzM5bSAgICAgMSBEdXJhdGlvbiAoaW4gc2Vjb25kcykgYW4gaW50ZWdlciAgIER1cmF0aW9uIChpbiBzZWNvbmRzKSAnc3RhdHNfdGVzdGluZ192MS5jc3YnIGV4cGVjdGVkIFx1MDAxYlszODs1OzI1MG01XHUwMDFiWzM5bSAgICAgMSBSZWNvcmRlZERhdGUgICAgICAgICAgXHUwMDFiWzM4OzU7MjQ2bVwiXHUwMDFiWzM5bWRhdGUgbGlrZSBcdTAwMWJbMzg7NTsyNDZtXCJcdTAwMWJbMzltIFJlY29yZGVkIERhdGUgICAgICAgICAnc3RhdHNfdGVzdGluZ192MS5jc3YnXG4uLi4gLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uIC4uLiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gLi4uLi4uLi4gLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gLi4uLi4uIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAuLi4uIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAuLi4gLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAuLi4gLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAuLi4uLi4uLiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5cblNlZSBwcm9ibGVtcyguLi4pIGZvciBtb3JlIGRldGFpbHMuXG4ifQ== -->
-<pre><code>number of columns of result is not a multiple of vector length (arg 1)14 parsing failures.
-row [38;5;246m# A tibble: 5 x 5[39m col     row col                   expected     actual                file                   expected   [3m[38;5;246m&lt;int&gt;[39m[23m [3m[38;5;246m&lt;chr&gt;[39m[23m                 [3m[38;5;246m&lt;chr&gt;[39m[23m        [3m[38;5;246m&lt;chr&gt;[39m[23m                 [3m[38;5;246m&lt;chr&gt;[39m[23m                  actual [38;5;250m1[39m     1 StartDate             [38;5;246m&quot;[39mdate like [38;5;246m&quot;[39m Start Date            'stats_testing_v1.csv' file [38;5;250m2[39m     1 EndDate               [38;5;246m&quot;[39mdate like [38;5;246m&quot;[39m End Date              'stats_testing_v1.csv' row [38;5;250m3[39m     1 Progress              an integer   Progress              'stats_testing_v1.csv' col [38;5;250m4[39m     1 Duration (in seconds) an integer   Duration (in seconds) 'stats_testing_v1.csv' expected [38;5;250m5[39m     1 RecordedDate          [38;5;246m&quot;[39mdate like [38;5;246m&quot;[39m Recorded Date         'stats_testing_v1.csv'
-... ................................. ... ....................................................................................... ........ .................................................................................................................................................................................................................... ...... ....................................................................................................................................... .... ....................................................................................................................................... ... ....................................................................................................... ... ....................................................................................................... ........ .......................................................................................................................................
-See problems(...) for more details.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMoZGZfZmlyc3RfdHdvKVxuYGBgIn0= -->
-<pre class="r"><code>names(df_first_two)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcIlN0YXJ0RGF0ZVwiICAgICAgICAgICAgIFwiRW5kRGF0ZVwiICAgICAgICAgICAgICAgXCJTdGF0dXNcIiAgICAgICAgICAgICAgICBcIklQQWRkcmVzc1wiICAgICAgICAgICAgXG4gWzVdIFwiUHJvZ3Jlc3NcIiAgICAgICAgICAgICAgXCJEdXJhdGlvbiAoaW4gc2Vjb25kcylcIiBcIkZpbmlzaGVkXCIgICAgICAgICAgICAgIFwiUmVjb3JkZWREYXRlXCIgICAgICAgICBcbiBbOV0gXCJSZXNwb25zZUlkXCIgICAgICAgICAgICBcIlJlY2lwaWVudExhc3ROYW1lXCIgICAgIFwiUmVjaXBpZW50Rmlyc3ROYW1lXCIgICAgXCJSZWNpcGllbnRFbWFpbFwiICAgICAgIFxuWzEzXSBcIkV4dGVybmFsUmVmZXJlbmNlXCIgICAgIFwiTG9jYXRpb25MYXRpdHVkZVwiICAgICAgXCJMb2NhdGlvbkxvbmdpdHVkZVwiICAgICBcIkRpc3RyaWJ1dGlvbkNoYW5uZWxcIiAgXG5bMTddIFwiVXNlckxhbmd1YWdlXCIgICAgICAgICAgXCJRMVwiICAgICAgICAgICAgICAgICAgICBcIlEyXCIgICAgICAgICAgICAgICAgICAgIFwiUTNfMVwiICAgICAgICAgICAgICAgICBcblsyMV0gXCJRM18yXCIgICAgICAgICAgICAgICAgICBcIlEzXzNcIiAgICAgICAgICAgICAgICAgIFwiUTNfNFwiICAgICAgICAgICAgICAgICAgXCJRM181XCIgICAgICAgICAgICAgICAgIFxuWzI1XSBcIlEzXzZcIiAgICAgICAgICAgICAgICAgIFwiUTRcIiAgICAgICAgICAgICAgICAgICAgXCJRNF8xMF9URVhUXCIgICAgICAgICAgICBcIlE1XCIgICAgICAgICAgICAgICAgICAgXG5bMjldIFwiUTZcIiAgICAgICAgICAgICAgICAgICAgXCJRNl80X1RFWFRcIiAgICAgICAgICAgICBcIlE3XzFcIiAgICAgICAgICAgICAgICAgIFwiUTdfMlwiICAgICAgICAgICAgICAgICBcblszM10gXCJRN18zXCIgICAgICAgICAgICAgICAgICBcIlE3XzRcIiAgICAgICAgICAgICAgICAgIFwiUTdfNVwiICAgICAgICAgICAgICAgICAgXCJRN182XCIgICAgICAgICAgICAgICAgIFxuWzM3XSBcIlE3XzZfVEVYVFwiICAgICAgICAgICAgIFwiUThcIiAgICAgICAgICAgICAgICAgICBcbiJ9 -->
-<pre><code> [1] &quot;StartDate&quot;             &quot;EndDate&quot;               &quot;Status&quot;                &quot;IPAddress&quot;            
- [5] &quot;Progress&quot;              &quot;Duration (in seconds)&quot; &quot;Finished&quot;              &quot;RecordedDate&quot;         
- [9] &quot;ResponseId&quot;            &quot;RecipientLastName&quot;     &quot;RecipientFirstName&quot;    &quot;RecipientEmail&quot;       
-[13] &quot;ExternalReference&quot;     &quot;LocationLatitude&quot;      &quot;LocationLongitude&quot;     &quot;DistributionChannel&quot;  
-[17] &quot;UserLanguage&quot;          &quot;Q1&quot;                    &quot;Q2&quot;                    &quot;Q3_1&quot;                 
-[21] &quot;Q3_2&quot;                  &quot;Q3_3&quot;                  &quot;Q3_4&quot;                  &quot;Q3_5&quot;                 
-[25] &quot;Q3_6&quot;                  &quot;Q4&quot;                    &quot;Q4_10_TEXT&quot;            &quot;Q5&quot;                   
-[29] &quot;Q6&quot;                    &quot;Q6_4_TEXT&quot;             &quot;Q7_1&quot;                  &quot;Q7_2&quot;                 
-[33] &quot;Q7_3&quot;                  &quot;Q7_4&quot;                  &quot;Q7_5&quot;                  &quot;Q7_6&quot;                 
-[37] &quot;Q7_6_TEXT&quot;             &quot;Q8&quot;                   </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
