@@ -1,9 +1,9 @@
-# Intro to R
-This is a repo for a 3-day workshop on an intro to R and working with survey data. 
+# Intro to R - NYC edition! 
+This is a repository (repo) for 1 or 2 day workshop intro to R and working with survey data. 
 
-The first two days are taken from Amelia McNamara's [Intro to R](https://github.com/AmeliaMN/IntroToR/blob/master/README.md) workshop. 
+Much of the content and material is adapted from Amelia McNamara's [Intro to R](https://github.com/AmeliaMN/IntroToR/blob/master/README.md) workshop. 
 
-The third day focuses primarily on using R with survey data. 
+This workshop assumes no or beginner level experience with R. It will cover: 
 
 Day 1
 - 01-Introduction (what is R, what is RStudio)

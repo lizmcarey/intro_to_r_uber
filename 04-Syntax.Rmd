@@ -1,0 +1,193 @@
+---
+title: "Syntax"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup}
+library(ggplot2)
+library(fivethirtyeight)
+```
+
+## Syntax in ggplot2
+There are many ways to "say" the same thing in ggplot2
+
+```{r}
+ggplot(data = bechdel) +
+  geom_point(mapping = aes(x = budget, y = domgross)) +
+  geom_smooth(mapping = aes(x= budget, y = domgross))
+```
+
+```{r}
+ggplot(data = bechdel, aes(x= budget, y = domgross)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+ggplot(bechdel) + 
+  geom_point(aes(x = budget, y = domgross))
+
+ggplot(bechdel, aes(x = budget, y = domgross)) +
+  geom_point()
+
+ggplot(bechdel, aes(x= budget)) + 
+  geom_point(aes(y = domgross))
+```
+
+Override the global mappings
+
+```{r}
+ggplot(data = bechdel, aes(x= budget, y = domgross)) +
+  geom_point(aes(color=clean_test)) +
+  geom_smooth()
+```
+
+## Subsetting
+
+## The dplyr way
+To use the dplyr package, we need to load it.
+
+```{r}
+library(dplyr)
+```
+
+
+
+## Beatles data
+Let's make a toy data set to play with. 
+
+```{r}
+beatles_dataframe <- data.frame(
+  name = c("John", "Paul", "George", "Ringo"),
+  birth = c(1940, 1942, 1943, 1940), 
+  instrument = c("guitar", "bass", "guitar", "drums")
+)
+```
+
+Create the same toy data set but in a tibble format. We can use the `tibble()` or the `tribble()` function
+```{r}
+beatles_tibble1 <- tibble(
+  name = c("John", "Paul", "George", "Ringo"),
+  birth = c(1940, 1942, 1943, 1940), 
+  instrument = c("guitar", "bass", "guitar", "drums")
+)
+
+
+beatles_tibble2 <- tribble(
+  ~name, ~birth, ~instrument, 
+  #--|--|----
+  "John", 1940, "guitar", 
+  "Paul", 1942, "bass", 
+  "George", 1943, "guitar", 
+  "Ringo", 1940, "drums"
+  )
+```
+
+## Select
+Select is a way to extract columns from dataframes
+
+```{r}
+select(beatles, name, birth)
+```
+
+## Your turn
+Select just the instrument column
+
+
+## Filter
+
+```{r}
+filter(beatles, name == "George")
+```
+
+## Your turn
+
+
+## More than one condition
+```{r}
+filter(beatles, birth==1940, instrument == "guitar")
+filter(beatles, birth==1940 & instrument == "guitar")
+```
+
+## Your turn
+Modify the code below to filter out the rows for which birth is 1943 or instrument is drums
+
+```{r}
+filter(beatles, birth==1940 & instrument == "guitar")
+```
+
+
+## Your turn
+
+## Baby names data
+Names with at least 5 uses in a particular year, from the Social Security Administration. 
+
+```{r}
+library(babynames)
+```
+
+## Your turn
+Do you remember how to view a dataset?
+
+## Saving results
+
+```{r}
+filter(babynames, name %in% c("Acura", "Lexus", "Yugo"))
+carnames <- filter(babynames, name %in% c("Acura", "Lexus", "Yugo"))
+```
+
+```{r}
+babynames <- filter(babynames, name %in% c("Acura", "Lexus", "Yugo")) # dangerous!
+rm(babynames)
+str(babynames) #phew!
+```
+
+## Your turn
+Try to:
+- Filter out the babynames data for your name. (You may want to also filter for your gender)
+- Assign that data its own name 
+- Use your subsetted data to create a ggplot graphic of the popularity of your name over time
+
+## Steps
+
+```{r}
+boys_2015 <- filter(babynames, year == 2015, sex == "M")
+boys_2015 <- select(boys_2015, name, n)
+boys_2015 <- arrange(boys_2015, desc(n))
+boys_2015
+```
+
+Nested nonsense
+
+```{r}
+arrange(select(filter(babynames, year == 2015, 
+  sex == "M"), name, n), desc(n))
+```
+
+## Piping
+The `%>%` operator is the pipe. We can reorganize our code like so:
+
+```{r}
+babynames %>%
+  filter(year == 2015, sex == "M") %>%
+  select(name, n) %>%
+  arrange(desc(n))
+```
+
+[Tip: type Cmd Shift M to insert a pipe]
+
+## Your turn
+Use %>% to write a sequence of functions that: 
+- Filter babynames to just the girls that were born in 2015
+- Select the `name` and `n` columns
+- Arrange the results so that the most popular names are near the top.
+
+```{r}
+
+```
+
+

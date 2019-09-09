@@ -1,0 +1,337 @@
+---
+title: "R Structures"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+## Arithmetic and algebra
+
+Let's start with the same arithmetic we were just doing in the Console. Notice that the math is surrounded by some special characters above and below, and has a grey background. This is RStudio's way of showing you the difference between an area to write text (here!) and an area where code is stored (called a code chunk).
+
+```{r}
+5 + 5
+4 - 1
+1 * 2
+4 ^ 2
+```
+
+Try executing this chunk by clicking the green *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. These two actions do the same thing-- they run all the lines of code in a chunk, and show you all the output.
+
+You can also run just one line at a time by putting your cursor on a line and pressing *Cmd+Enter*. Then, you'll just see the output for the one line. 
+
+We can do the same with the algebra we just saw,
+
+```{r}
+a <- 1
+b <- 2
+a + b
+A <- 3
+a + b - A
+```
+
+What happened in your Environment when you ran that code? 
+
+## Functions 
+
+```{r}
+round(3.1415)
+factorial(3)
+sqrt(9)
+
+factorial(round(2.0015) + 1)
+```
+
+
+## Code Chunk Options 
+
+There are a lot of things you can do in a code chunk: you can produce text output, tables, or graphics. 
+
+You also have control over all these output via chunk options, which can be provided inside the curly braces (between ```{r and }). 
+
+`echo=FALSE` indicates that the code will not be shown in the final document (though any results/output would still be displayed).
+
+```{r, echo=FALSE}
+x <- rnorm(100)
+y <- 2*x + rnorm(100)
+cor(x, y)
+```
+You use `results="hide"` to hide the results/output (but here the code would still be displayed).
+
+```{r, results="hide"}
+x <- rnorm(100)
+y <- 2*x + rnorm(100)
+cor(x, y)
+```
+You use `include=FALSE` to have the chunk *evaluated*, but neither the code nor its output displayed.
+
+```{r, include=FALSE}
+x <- rnorm(100)
+y <- 2*x + rnorm(100)
+cor(x, y)
+```
+
+For figures, you’ll want to use options like fig.width and fig.height
+
+```{r scatterplot, fig.width=8, fig.height=6}
+plot(x,y)
+```
+
+## R Markdown
+
+Markdown provides an easy way to make standard types of formatted text, like
+
+- *italics*
+- **bold**
+- `code`
+- [links](rmarkdown.rstudio.com)
+- Latex equations, $E = mc^{2}$
+- etc.
+
+
+## "knitted" HTML version
+
+This functionality is supported by an R package called `knitr`, so we often talk about "knitted" versions of RMarkdown and R Notebook documents. 
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it. This makes a nice, polished report of your work to share.
+
+Click the *Preview* button at the top of this document or press *Cmd+Shift+K* (*Ctrl+Shift+K* on Windows) to preview the HTML file. Try clicking *Preview* now.
+
+## R Objects and functions
+
+```{r objects and functions}
+the_answer <- 42
+more_pi <- round(3.1415) + 1
+factorial(more_pi)
+```
+
+## Vectors and matrices
+
+```{r vectors}
+vec <- c(1, 2, 3, 10, 100)
+vec
+```
+
+## Data types
+
+Numeric
+```{r numeric}
+1 + 1
+3000000
+class(0.00001)
+```
+
+Character
+```{r character}
+"hello"
+class("hello")
+```
+
+```{r, error=TRUE}
+"hello" + "world"
+```
+
+```{r}
+nchar("hello")
+?nchar
+
+paste("hello", "world")
+?paste
+```
+
+Logical
+```{r logical}
+3 > 4
+class(TRUE)
+class(T)
+```
+
+Factor (danger zone!)
+```{r factor}
+fac <- factor(c("a", "b", "c"))
+fac
+class(fac)
+```
+
+## Your turn 
+
+Make a vector that contains the number 1, the letter R, and the logical TRUE
+
+```{r}
+
+```
+
+## Manual Coercion
+```{r}
+#Convert character to a numeric
+as.numeric("1")
+
+#Convert a logical to character
+as.character(TRUE)
+
+```
+
+## Data frames
+```{r}
+df <- data.frame(c(1, 2, 3), 
+                 c("R","S","T"), 
+                 c(TRUE, FALSE, TRUE))
+class(df)
+```
+## str()
+
+Run `str()` to see the structure of an object
+
+```{r}
+?str()
+```
+
+## Naming 
+```{r}
+nvec <- c(one = 1, two = 2, three = 3)
+```
+
+```{r}
+ndf <- data.frame(numbers = c(1, 2, 3), 
+                  letters = c("R","S","T"), 
+                  logic = c(TRUE, FALSE, TRUE))
+```
+
+```{r}
+names(ndf)
+names(nvec)
+names(df)
+```
+## Tibbles
+
+```{r tibble}
+df_tibble <- tibble(c(1, 2, 3), 
+                    c("R","S","T"), 
+                    c(TRUE, FALSE, TRUE))
+
+#When running the same code, tibble will correctly store the second column as a character, not a factor. 
+str(df_tibble)
+```
+
+## Subsetting
+
+## The dplyr way
+To use the dplyr package, we need to load it.
+
+```{r}
+library(dplyr)
+```
+
+## Beatles data
+Let's make a toy data set to play with. 
+
+```{r}
+beatles <- data.frame(name = c("John", "Paul", "George", "Ringo"),
+                                birth = c(1940, 1942, 1943, 1940), 
+                                instrument = c("guitar", "bass", "guitar", "drums")
+                                )
+```
+
+Create the same toy data set but in a tibble format. We can use the `tibble()` or the `tribble()` function
+
+```{r}
+beatles_tibble1 <- tibble(name = c("John", "Paul", "George", "Ringo"),
+                          birth = c(1940, 1942, 1943, 1940), 
+                          instrument = c("guitar", "bass", "guitar", "drums")
+                        )
+
+
+beatles_tibble2 <- tribble(
+  ~name, ~birth, ~instrument, 
+  #--|--|----
+  "John", 1940, "guitar", 
+  "Paul", 1942, "bass", 
+  "George", 1943, "guitar", 
+  "Ringo", 1940, "drums"
+  )
+```
+
+## Select
+Select is a way to extract columns from dataframes
+
+```{r}
+select(beatles, name, birth)
+```
+
+## Your turn
+Select just the instrument column
+```{r}
+select(beatles, instrument)
+```
+
+## Filter
+
+```{r}
+filter(beatles, name == "George")
+```
+
+## Your turn
+Alter the code to filter out just rows where birth is 1940:
+```{r your turn filter}
+
+```
+## Logical comparisons
+
+```{r Logical comparison basics}
+1 < 3
+1 > 3
+c(1, 2, 3, 4, 5) > 3
+
+```
+
+```{r Logical comparison basics2 }
+1 %in% c(1, 2, 3, 4)
+1 %in% c(2, 3, 4)
+c(3,4,5,6) %in% c(2, 3, 4)
+```
+## Your Turn Logical Comparions
+```{r}
+x <- c(1, 2, 3, 4, 5)
+
+
+```
+
+
+## More than one condition
+```{r}
+filter(beatles, birth==1940, instrument == "guitar")
+filter(beatles, birth==1940 & instrument == "guitar")
+```
+
+## Your turn
+Modify the code below to filter out the rows for which birth is 1943 or instrument is drums
+
+```{r}
+filter(beatles, birth==1940 & instrument == "guitar")
+```
+
+
+## Baby names data
+Names with at least 5 uses in a particular year, from the Social Security Administration. 
+
+```{r Load babynames}
+library(babynames)
+```
+
+## Your turn
+Do you remember how to view a dataset?
+
+```{r}
+#Enter code to view a data set
+```
+## Your turn: return rows with your name 
+```{r}
+#Enter code to return only the  babies with your first name. 
+```
+
+#Your turn: return all of the names where prop is greater than or equal to 0.08, All of the children named “Sea”, All of the names that have a missing value for n
+
+```{r}
+
+```
+

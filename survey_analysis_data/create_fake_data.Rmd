@@ -1,0 +1,149 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r setup}
+library(charlatan)
+library(glue)
+
+set.seed(99)
+```
+
+```{r}
+#store file path
+file <- "stats_testing_v1.csv"
+
+#store column names
+df_names <- read_csv(file, n_max=0) %>% names()
+
+# Read the entire file
+df_raw <- read_csv(file, 
+               col_names = df_names, # use df_names to title the columns
+               skip = 3)             # skip the first three lines
+
+#store the question names as a question bank
+question_bank <- read_csv(file, n_max=1) %>%  # read in the first row of the file
+                 select(starts_with("Q")) %>% # select columns that start with Q
+                 gather(key, question_text)   # transform data from wide to long
+
+df_first_two <- read_csv(file, 
+                         col_types = cols(
+                           StartDate = col_datetime(), 
+                           EndDate = col_datetime(), 
+                           Progress = col_integer(),
+                           `Duration (in seconds)` = col_integer(),
+                           RecordedDate = col_datetime(), 
+                           LocationLongitude = col_number(), 
+                           LocationLatitude = col_number()
+                         ), 
+                         n_max = 2)
+
+names(df_first_two)
+```
+
+```{r}
+#check column names
+names(df)
+
+```
+
+```{r}
+df <-
+  df_raw %>% 
+    add_row(StartDate = sample(x = seq(from = as.Date("2019-08-13") , 
+                                      to = as.Date("2019-08-24"), 
+                                      by = "day"), 
+                              size = 1000, replace = TRUE)) %>% 
+    mutate(EndDate = StartDate + minutes(x = sample(1:500, replace = TRUE)), 
+           Q1 = sample(c("Daily", 
+                         "2-6 times a week", 
+                         "Once a week", 
+                         "2-3 times a month", 
+                         "Once a month or less"), 
+                       n(), replace = TRUE, prob = c(0.05, 0.25, 0.30, 0.20, 0.20)), 
+           Q2 = case_when(
+                  Q1 == "Daily" ~ "4 or more", 
+                  Q1 == "2-6 times a week" ~ "3", 
+                  Q1 == "Once a week" ~ "2", 
+                  Q1 == "2-3 times a month" ~ "1", 
+                  Q1 == "Once a month or less" ~ "0"
+                          ), 
+           Q3_1 = sample(c("I'm ordering for a group", NA), n(), replace = TRUE, prob = (c(.3, .7))), 
+           Q3_2 = sample(c("I don't want to cook", NA), n(), replace = TRUE, prob = c(.2, .8)),
+           Q3_3 = sample(c("I want a specific meal or item", NA), n(), replace = TRUE, prob = c(.1, .9)), 
+           Q3_4 = sample(c("I don't have any groceries", NA), n(), replace = TRUE, prob = c(.15, .85)), 
+           Q3_5 = sample(c("I don't have the time to cook", NA), n(), replace = TRUE, prob = c(.65, .35)), 
+           Q3_6 = sample(c("Other:", NA), n(), replace = TRUE, prob = c(.05, .95 )), 
+           Q4 = sample(c("Burgers", "Italian", "Pizza", "Thai", "Sushi", "Indian", "Mexican", "American", "Chinese", "Other", NA), n(), replace = TRUE, prob = c(.24, .05, .29, .11, .03, .05, .10, .07, .03, .02, .01 )), 
+           Q5 = sample(c("Extremely dissatisfied", "Somewhat dissatisfied", "Neither satisfied nor dissatisfied", "Somewhat satisfied", "Extremely satisfied"), n(), replace = TRUE, prob = c(.1, .2, .25, .35, .1)), 
+           Q6 = sample(c("Mobile app on smartphone", "Phone call", "Web browser on desktop or laptop", "Other:", NA), n(), replace = TRUE, prob = c(.65, .05, .2, .05, .05 )), 
+          Q7_1 = sample(c("Delivery time", NA), n(), replace = TRUE, prob = c(.4, .6)), 
+          Q7_2 = sample(c("Food temperature", NA), n(), replace = TRUE, prob = c(.2, .8)), 
+          Q7_3 = sample(c("Delivery price", NA), n(), replace = TRUE, prob = c(.5, .5)), 
+          Q7_4 = sample(c("Food packaging", NA), n(), replace = TRUE, prob = c(.1, .9)),
+          Q7_5 = sample(c("Courier service", NA), n(), replace = TRUE, prob = c(.15, .85)), 
+          Q7_6 = sample(c("Other:", NA), n(), replace = TRUE, prob = c(.12, .88)), 
+          ci = sample(c(1, 5, 12, 14, 10, 24, 6), n(), replace = TRUE, prob = c(.4, .2, .1, .05, .07, .08, .1 )), 
+          Status = sample(c("Survey Test", "IP Address", "Survey Preview"), n(), replace = TRUE, prob = c(.02, .97, .01))
+    ) 
+
+df
+```
+
+```{r}
+view(dfSummary(df))
+```
+
+```{r}
+email_domains <- c("@gmail.com", "@hotmail.com", "@outlook.com", "@me.com", "@yahoo.com")
+
+
+emails <- 
+  ch_generate('name', 'job', 'phone_number', n = 1025) %>% 
+  separate(name, "first_name", extra = "drop", remove=FALSE) %>% 
+  mutate(
+         name_one_word = str_replace_all(name, " ", ""),  
+         email = glue("{name_one_word}{email_domain}", 
+                       name_one_word = name_one_word, 
+                       email_domain = sample(email_domains, 1025, replace=TRUE) ), 
+         gender = sample(c("male", "female", "other", "prefer not to say"), 1025, replace=TRUE, prob=c(0.55, 0.35, 0.05, 0.05)), 
+         age = sample(c("Under 18", "18-34", "35-54", "55+"), 1025, replace=TRUE, prob = c(0.05, 0.25, 0.40, 0.30))
+        )
+         
+#Choose 5 emails to create duplicates         
+emails_to_dupe <- 
+  emails %>% 
+  #filter(emails, between(row_number(), 1, 5)) %>% 
+  slice(rep(1:5, c(8, 5, 5, 12, 7)))
+
+#merge emails and duped emails
+demos <- full_join(emails, emails_to_dupe)
+
+view(dfSummary(demos))
+```
+
+```{r}
+#add email column to later join to demos
+df <-
+      df_first_two %>% 
+      full_join(df) %>% 
+      add_column(e = demos$email)
+
+view(dfSummary(df))
+```
+
+
+
+```{r}
+#store survey file data
+write_csv(df, "survey_file.csv")
+```
+
+```{r}
+#store distinct demos
+demos <- distinct(demos, email, .keep_all = TRUE) %>% 
+  write_csv(., here::here("Data","distinct_demos.csv"))
+```
+
