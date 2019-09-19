@@ -623,6 +623,7 @@ band %>% left_join(instrument2, by = c("name" = "artist"))
 ```{r}
 airports %>% select(1:3)
 ```
+
 ```{r}
 flights %>% select(14:15)
 ```
@@ -718,4 +719,88 @@ Use `gather()` to reorganize `table4a` into three columns: **country**, **year**
 
 On a sheet of paper, draw how this data set would look if it had the same values grouped into three columns: **city**, **large**, **small**
 
+## Spread 
+
+```{r}
+pollution %>% spread(key = size, value = amount)
+pollution %>% spread(size, amount)
+```
+
+## Your turn
+
+Use `spread()` to reorganize `table2` into four columns: **country**, **year**, **cases**, and **population**.
+
+```{r}
+
+```
+
+## WorldPhones data
+```{r}
+#load in data set called WordlPhones
+data(WorldPhones)
+```
+
+## Coercion
+
+```{r}
+WorldPhones <- as.data.frame(WorldPhones)
+WorldPhones 
+WorldPhones <- rownames_to_column(WorldPhones)
+WorldPhones
+```
+## Your turn
+Use the appropriate function to reorganize WorldPhones into four columns: year, area, and n.
+
+```{r}
+
+```
+
+## Renaming
+
+```{r}
+library(dplyr)
+WorldPhones <- WorldPhones %>%
+    rename("year" = "rowname")
+```
+
+
+
+```{r setup}
+library(ggplot2)
+library(fivethirtyeight)
+```
+
+## Syntax in ggplot2
+There are many ways to "say" the same thing in ggplot2
+
+```{r}
+ggplot(data = bechdel) +
+  geom_point(mapping = aes(x = budget, y = domgross)) +
+  geom_smooth(mapping = aes(x= budget, y = domgross))
+```
+
+```{r}
+ggplot(data = bechdel, aes(x= budget, y = domgross)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+ggplot(bechdel) + 
+  geom_point(aes(x = budget, y = domgross))
+
+ggplot(bechdel, aes(x = budget, y = domgross)) +
+  geom_point()
+
+ggplot(bechdel, aes(x= budget)) + 
+  geom_point(aes(y = domgross))
+```
+
+Override the global mappings
+
+```{r}
+ggplot(data = bechdel, aes(x= budget, y = domgross)) +
+  geom_point(aes(color=clean_test)) +
+  geom_smooth()
+```
 
